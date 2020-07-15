@@ -27,6 +27,13 @@ func getUserID(ctx context.Context, sdk *ycsdk.SDK, user string) (userID string,
 	response, err = sdk.IAM().YandexPassportUserAccount().GetByLogin(ctx, &iam.GetUserAccountByLoginRequest{
 		Login: user,
 	})
+	if err == nil {
+		return response.GetId(), err
+	}
+
+	response, err := sdk.IAM().ServiceAccount().Get(ctx, &iam.GetServiceAccountRequest{
+		ServiceAccountId: user,
+	})
 
 	return response.GetId(), err
 }
